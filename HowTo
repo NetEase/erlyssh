@@ -1,0 +1,9 @@
+RUN:
+erl -noinput -pa $ESSH_HOME/ebin -run essh start $LD_LIBRARY_PATH $PATH_TO_SERVER_LST_FILE
+
+SERVER_LST_FILE's Format:
+#------------
+server-1
+server-2
+server-3
+#------------

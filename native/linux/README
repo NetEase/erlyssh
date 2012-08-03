@@ -1,0 +1,7 @@
+denpendency:
+libreadline.so.5.2
+libhistory.so.5.2
+
+--------------------------
+compiled under 64bit debian
+readline_drv.so
