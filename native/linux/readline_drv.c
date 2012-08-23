@@ -10,19 +10,19 @@ typedef struct {
 static char *line_read = (char*)NULL;
 static char *prompt = "essh>: ";
 
-static ErlDrvData readline_drv_start(ErlDrvPort port, char *buff){
+static ErlDrvData libreadlinedrv_start(ErlDrvPort port, char *buff){
 	
     readline_data* d = (readline_data*)driver_alloc(sizeof(readline_data));
     d->port = port;	
     return (ErlDrvData)d;
 }
 
-static void readline_drv_stop(ErlDrvData handle)
+static void libreadlinedrv_stop(ErlDrvData handle)
 {
     driver_free((char*)handle);
 }
 
-static void readline_drv_output(ErlDrvData handle, char *buff, int bufflen)
+static void libreadlinedrv_output(ErlDrvData handle, char *buff, int bufflen)
 {
     readline_data* d = (readline_data*)handle;
 
@@ -42,19 +42,19 @@ static void readline_drv_output(ErlDrvData handle, char *buff, int bufflen)
 
 ErlDrvEntry readline_driver_entry = {
     NULL,                       /* F_PTR init, N/A */
-    readline_drv_start,          /* L_PTR start, called when port is opened */
-    readline_drv_stop,           /* F_PTR stop, called when port is closed */
-    readline_drv_output,         /* F_PTR output, called when erlang has sent */
+    libreadlinedrv_start,          /* L_PTR start, called when port is opened */
+    libreadlinedrv_stop,           /* F_PTR stop, called when port is closed */
+    libreadlinedrv_output,         /* F_PTR output, called when erlang has sent */
     NULL,                       /* F_PTR ready_input, called when input descriptor ready */
     NULL,                       /* F_PTR ready_output, called when output descriptor ready */
-    "readline_drv",              /* char *driver_name, the argument to open_port */
+    "libreadlinedrv",              /* char *driver_name, the argument to open_port */
     NULL,                       /* F_PTR finish, called when unloaded */
     NULL,                       /* F_PTR control, port_command callback */
     NULL,                       /* F_PTR timeout, reserved */
     NULL                        /* F_PTR outputv, reserved */
 };
 
-DRIVER_INIT(readline_drv) /* must match name in driver_entry */
+DRIVER_INIT(libreadlinedrv) /* must match name in driver_entry */
 {
     return &readline_driver_entry;
 }

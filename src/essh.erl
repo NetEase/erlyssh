@@ -25,12 +25,11 @@
 %% External functions
 %% ====================================================================
 %%
-%% TODO: Add description of start/function_arity
 %%
 start(StartParas) -> 
     [SharedPath, FilePath | Command] = StartParas,
     StartCommand = get_start_command(Command, ""),    
-    SharedLib = "readline_drv",
+    SharedLib = "libreadlinedrv",
 	%io:format("starting essh server~n"),    
     essh_scheduler:start(),
     gen_server:start_link({local,?MODULE}, ?MODULE, [SharedPath, SharedLib, FilePath, StartCommand], []).
