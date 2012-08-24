@@ -1,11 +1,13 @@
 erlyssh - A Parallel SSH Execution Tool
 =======
 
-Intro:
---------
 This is an Erlang Powered linux command line tool.You can use this tool to 
 connect to mass of servers through SSH client simultaneously and parallel 
 execute noninteractive shell commands on every connected server. 
+
+* Homepage: <https://github.com/NetEase/erlyssh>
+* Tags: tools, ssh, operation, erlang
+
 
 Requirements:
 --------
@@ -107,11 +109,6 @@ execute non-interactive commands.
 non-interactive commands. Such as 'svn' commands have non-interactive
 mode and 'sed' can help you to perform plain text processing.
 
-
-Project Links:
---------
-* Homepage: <https://github.com/NetEase/erlyssh>
-* Tags: tools, ssh, operation, erlang
 
 How Can I Contribute
 --------------------
