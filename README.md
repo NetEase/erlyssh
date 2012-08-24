@@ -106,3 +106,9 @@ execute non-interactive commands.
 3. Many shell commands have their non-interactive mode or corresponded 
 non-interactive commands. Such as 'svn' commands have non-interactive
 mode and 'sed' can help you to perform plain text processing.
+
+
+Project Links:
+--------
+* Homepage: <https://github.com/NetEase/erlyssh>
+* Tags: tools, ssh, operation, erlang
