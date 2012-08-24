@@ -112,3 +112,9 @@ Project Links:
 --------
 * Homepage: <https://github.com/NetEase/erlyssh>
 * Tags: tools, ssh, operation, erlang
+
+How Can I Contribute
+--------------------
+Fork this project on [GitHub](https://github.com/NetEase/erlyssh), add your improvement, push it to a branch in your fork named for the topic, send a pull request.
+
+You can also file bugs or feature requests under the [issues](https://github.com/radiumce/erlyssh/issues/) page on GitHub.
