@@ -117,4 +117,4 @@ How Can I Contribute
 --------------------
 Fork this project on [GitHub](https://github.com/NetEase/erlyssh), add your improvement, push it to a branch in your fork named for the topic, send a pull request.
 
-You can also file bugs or feature requests under the [issues](https://github.com/radiumce/erlyssh/issues/) page on GitHub.
+You can also file bugs or feature requests under the [issues](https://github.com/NetEase/erlyssh/issues/) page on GitHub.
