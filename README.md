@@ -28,6 +28,7 @@ run sudo make install
 or you can provide --prefix=/custom-install-path/ as ./configure option
 
 if any buid error occurs, try to check
+
 1. Is libreadline's arch compatible with your erlang runtime
 2. Check include path and library path, add your custom -I -L to CFLAGS env
 3. Is your default system arch compatible with your erlang runtime, otherwise
