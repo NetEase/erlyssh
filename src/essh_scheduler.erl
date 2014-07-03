@@ -112,12 +112,9 @@ send_cmd(Pids, Cmd, Intv) ->
       fun() -> 
               if 
                  Intv > 0 ->
-                     receive 
-                     after Intv ->
-                             ok
-                     end;
+                     timer:sleep(Intv);
                  true -> ok
-           	  end,
+           	     end,
               [gen_fsm:send_event(Pid, {cmd, Cmd}) || Pid <- Pids]
        end).    
                

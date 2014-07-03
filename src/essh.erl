@@ -16,7 +16,7 @@
 -export([start/1]).
 
 %% gen_server callbacks
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3, get_start_opts/2]).
 
 -record(options, {con = 256, intv = 0}).
 -record(state, {shell,pids = [], servers, cur = empty, opt = #options{}}).
@@ -28,11 +28,13 @@
 %%
 start(StartParas) -> 
     [SharedPath, FilePath | Command] = StartParas,
-    StartCommand = get_start_command(Command, ""),    
+    {Command2, Options} = get_start_opts(Command, []),
+    StartCommand = get_start_command(Command2, ""),    
     SharedLib = "libreadlinedrv",
 	%io:format("starting essh server~n"),    
     essh_scheduler:start(),
-    gen_server:start_link({local,?MODULE}, ?MODULE, [SharedPath, SharedLib, FilePath, StartCommand], []).
+    gen_server:start_link({local,?MODULE}, ?MODULE, 
+        [SharedPath, SharedLib, FilePath, StartCommand, Options], []).
 
 %% ====================================================================
 %% Server functions
@@ -46,11 +48,13 @@ start(StartParas) ->
 %%          ignore               |
 %%          {stop, Reason}
 %% --------------------------------------------------------------------
-init([SharedPath, SharedLib, FilePath, StartCommand]) -> 
+init([SharedPath, SharedLib, FilePath, StartCommand, Options]) -> 
+    [init_options(K, V) || {K, V} <- Options], 
     Servers = try get_server_lst(FilePath) of
 					S -> S
 			catch 
-					_:X -> io:format("ERROR: can't open server list file~n"),halt()
+					_:_ -> io:format("ERROR: can't open server list file~n"),
+                    halt()
 			end,
     %io:format("INFO:servers = ~p~n", [Servers]),
     [Primary | _ ] = Servers,
@@ -65,6 +69,53 @@ init([SharedPath, SharedLib, FilePath, StartCommand]) ->
     Pids = start_agents(Servers),
     call_ext(Pids, ""),
     {ok, #state{shell = Shell, pids = Pids, servers = Servers, cur = Servers}}.
+
+init_options(con, Val) ->
+    gen_server:call(essh_scheduler, {opt, con, Val}),
+    gen_server:cast(essh, {opt, con, Val});
+init_options(intv, Val) ->
+    gen_server:call(essh_scheduler, {opt, intv, Val}),
+    gen_server:cast(essh, {opt, intv, Val}).
+
+
+get_start_opts([], Acc) ->
+    {[], Acc};
+get_start_opts([C], Acc) ->
+    case parse_opt(C, []) of
+        {opt, s, OptTup} ->
+            {[], [OptTup|Acc]};
+        _ ->
+            {[C], Acc}
+    end;
+get_start_opts(Cmd = [C, C1|CR], Acc) ->
+    case parse_opt(C, C1) of
+        {opt, m, OptTup} ->
+            get_start_opts(CR, [OptTup|Acc]);
+        {opt, s, OptTup} ->
+            get_start_opts([C1|CR], [OptTup|Acc]);
+        no_opt ->
+            {Cmd, Acc}
+    end.
+
+parse_opt("-D", Opt) ->
+    T = parse_opt2(Opt),
+    {opt, m, T};
+parse_opt("-D" ++ Opt, _) ->
+    T = parse_opt2(Opt),
+    {opt, s, T};
+parse_opt(_, _) ->
+    no_opt.
+
+parse_opt2(Opt) ->
+    [K, V] = string:tokens(Opt, "="),
+    case string:to_integer(V) of
+        {IntVal, _} ->
+            {erlang:list_to_atom(K), IntVal};
+        _ ->
+            {erlang:list_to_atom(K), V}
+    end.
+
+
 
 get_start_command([C | CR], Cmd) ->
     get_start_command(CR, lists:concat([Cmd, C, " "]));
